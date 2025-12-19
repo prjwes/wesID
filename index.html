@@ -16,14 +16,30 @@
             overflow-x: hidden;
         }
 
-        /* Header Section */
+        /* Header Section with Background Image */
         header {
-            background: linear-gradient(135deg, #4a90e2, #50e3c2);
+            background: linear-gradient(135deg, rgba(74, 144, 226, 0.8), rgba(80, 227, 194, 0.8)), url('https://via.placeholder.com/1920x1080?text=Abstract+Background') no-repeat center center/cover;
             color: white;
             text-align: center;
             padding: 100px 20px;
             position: relative;
             overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.3); /* Semi-transparent overlay for visibility */
+            z-index: 1;
+        }
+
+        header > * {
+            position: relative;
+            z-index: 2;
         }
 
         header h1 {
@@ -80,6 +96,57 @@
             100% { transform: scale(1.5); opacity: 0; }
         }
 
+        /* Crossing Lines and Shoots Animation */
+        .lines-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .line {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.3);
+            height: 2px;
+            animation: cross-line 5s linear infinite;
+        }
+
+        .line:nth-child(odd) {
+            width: 100%;
+            top: 0;
+            animation-direction: normal;
+        }
+
+        .line:nth-child(even) {
+            width: 100%;
+            bottom: 0;
+            animation-direction: reverse;
+        }
+
+        .shoot {
+            position: absolute;
+            width: 5px;
+            height: 5px;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 0 10px white;
+            animation: shoot 3s linear infinite;
+        }
+
+        @keyframes cross-line {
+            0% { transform: translateX(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) rotate(45deg); }
+        }
+
+        @keyframes shoot {
+            0% { transform: translate(0, 0); opacity: 1; }
+            100% { transform: translate(200vw, 200vh); opacity: 0; }
+        }
+
         /* Sections */
         section {
             padding: 60px 20px;
@@ -102,13 +169,15 @@
             color: #4a90e2;
         }
 
-        /* Personal Details */
+        /* Personal Details - Maroon Card */
         #personal-details {
-            background: white;
+            background: #800000; /* Maroon */
+            color: white;
             border-radius: 10px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
             padding: 40px;
             text-align: center;
+            animation: dance 2s infinite ease-in-out;
         }
 
         /* CV Section */
@@ -128,6 +197,7 @@
             overflow: hidden;
             transition: all 0.3s;
             box-shadow: 0 0 10px rgba(74, 144, 226, 0.5);
+            animation: dance 2s infinite ease-in-out;
         }
 
         .cv-button::before {
@@ -151,7 +221,7 @@
             box-shadow: 0 0 20px rgba(74, 144, 226, 1);
         }
 
-        /* Portfolio Section */
+        /* Portfolio Section - Maroon Cards with Dance */
         #portfolio {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -159,7 +229,8 @@
         }
 
         .project {
-            background: white;
+            background: #800000; /* Maroon */
+            color: white;
             border-radius: 10px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
             padding: 30px;
@@ -167,6 +238,7 @@
             transition: transform 0.3s, box-shadow 0.3s;
             opacity: 0;
             transform: translateY(50px);
+            animation: dance 2s infinite ease-in-out;
         }
 
         .project.visible {
@@ -183,7 +255,7 @@
         .project h3 {
             font-size: 1.8em;
             margin-bottom: 10px;
-            color: #333;
+            color: white;
         }
 
         .project p {
@@ -222,6 +294,15 @@
 
         .project-button:hover {
             box-shadow: 0 0 20px rgba(80, 227, 194, 1);
+        }
+
+        /* Dance Animation */
+        @keyframes dance {
+            0% { transform: translateY(0) rotate(0deg); }
+            25% { transform: translateY(-5px) rotate(2deg); }
+            50% { transform: translateY(0) rotate(0deg); }
+            75% { transform: translateY(-5px) rotate(-2deg); }
+            100% { transform: translateY(0) rotate(0deg); }
         }
 
         /* Social Media Footer */
@@ -275,20 +356,94 @@
             transform: rotate(360deg);
         }
 
-        .phone {
-            font-size: 1.2em;
+        .social-icon::after {
+            content: attr(data-name);
+            position: absolute;
+            bottom: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            white-space: nowrap;
+        }
+
+        .social-icon:hover::after {
+            opacity: 1;
+        }
+
+        /* Contact Me Dropdown */
+        .contact-container {
+            position: relative;
+            display: inline-block;
             margin-top: 20px;
         }
 
-        .phone a {
+        .contact-button {
+            display: flex;
+            align-items: center;
             color: white;
             text-decoration: none;
-            position: relative;
-            transition: color 0.3s;
+            font-size: 1.2em;
+            cursor: pointer;
         }
 
-        .phone a:hover {
-            color: #50e3c2;
+        .contact-button img {
+            width: 20px;
+            height: 20px;
+            margin-left: 10px;
+        }
+
+        .dropdown {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: #444;
+            border-radius: 5px;
+            padding: 10px;
+            z-index: 10;
+            min-width: 150px;
+        }
+
+        .dropdown a {
+            display: flex;
+            align-items: center;
+            color: white;
+            text-decoration: none;
+            padding: 5px 0;
+        }
+
+        .dropdown a img {
+            width: 15px;
+            height: 15px;
+            margin-right: 10px;
+        }
+
+        .contact-container:hover .dropdown {
+            display: block;
+        }
+
+        .contact-container::after {
+            content: attr(data-name);
+            position: absolute;
+            bottom: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            white-space: nowrap;
+        }
+
+        .contact-container:hover::after {
+            opacity: 1;
         }
 
         /* Responsive Design */
@@ -335,6 +490,19 @@
 </head>
 <body>
     <header>
+        <div class="lines-container">
+            <!-- Crossing Lines -->
+            <div class="line" style="animation-delay: 0s; top: 20%;"></div>
+            <div class="line" style="animation-delay: 1s; top: 40%;"></div>
+            <div class="line" style="animation-delay: 2s; top: 60%;"></div>
+            <div class="line" style="animation-delay: 3s; top: 80%;"></div>
+            <!-- Shoots -->
+            <div class="shoot" style="animation-delay: 0s; left: 10%; top: 10%;"></div>
+            <div class="shoot" style="animation-delay: 0.5s; left: 30%; top: 30%;"></div>
+            <div class="shoot" style="animation-delay: 1s; left: 50%; top: 50%;"></div>
+            <div class="shoot" style="animation-delay: 1.5s; left: 70%; top: 70%;"></div>
+            <div class="shoot" style="animation-delay: 2s; left: 90%; top: 90%;"></div>
+        </div>
         <div class="profile-pic">
             <img src="https://via.placeholder.com/200?text=Your+Photo" alt="Your Profile Picture">
         </div>
@@ -376,17 +544,21 @@
     <footer>
         <h2>Connect with Me</h2>
         <div class="social-icons">
-            <a href="https://wa.me/0758955122" class="social-icon"><img src="https://via.placeholder.com/30?text=WA" alt="WhatsApp"></a>
-            <a href="https://facebook.com/yourusername" class="social-icon"><img src="https://via.placeholder.com/30?text=FB" alt="Facebook"></a>
-            <a href="https://x.com/yourusername" class="social-icon"><img src="https://via.placeholder.com/30?text=X" alt="X"></a>
-            <a href="https://t.me/yourusername" class="social-icon"><img src="https://via.placeholder.com/30?text=TG" alt="Telegram"></a>
-            <a href="https://tiktok.com/@yourusername" class="social-icon"><img src="https://via.placeholder.com/30?text=TT" alt="TikTok"></a>
-            <a href="mailto:prjwess@gmail.com" class="social-icon"><img src="https://via.placeholder.com/30?text=GM" alt="Gmail"></a>
+            <a href="https://wa.me/0758955122?text=Hello%20Wess%2C" class="social-icon" data-name="WhatsApp"><img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp"></a>
+            <a href="https://facebook.com/yourusername" class="social-icon" data-name="Facebook"><img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" alt="Facebook"></a>
+            <a href="https://x.com/yourusername" class="social-icon" data-name="X"><img src="https://upload.wikimedia.org/wikipedia/commons/5/57/X_logo_2023_%28white%29.png" alt="X"></a>
+            <a href="https://t.me/yourusername?text=Hello%20Wess%2C" class="social-icon" data-name="Telegram"><img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" alt="Telegram"></a>
+            <a href="https://tiktok.com/@yourusername" class="social-icon" data-name="TikTok"><img src="https://upload.wikimedia.org/wikipedia/en/a/a9/TikTok_logo.svg" alt="TikTok"></a>
+            <a href="mailto:prjwess@gmail.com?body=Hello%20Wess%2C" class="social-icon" data-name="Gmail"><img src="https://upload.wikimedia.org/wikipedia/commons/8/8c/Gmail_Icon_%282013-2020%29.svg" alt="Gmail"></a>
             <!-- Add more social icons as needed -->
         </div>
-        <div class="phone">
-            <a href="tel:0758955122"><img src="https://via.placeholder.com/20?text=📞" alt="Phone"> 0758955122</a> / 
-            <a href="tel:0737615143">0737615143</a>
+        <div class="contact-container" data-name="Contact Options">
+            <div class="contact-button">Contact Me <img src="https://via.placeholder.com/20?text=📞" alt="Phone"></div>
+            <div class="dropdown">
+                <a href="tel:0758955122"><img src="https://via.placeholder.com/15?text=📞" alt="Call"> Call 0758955122</a>
+                <a href="tel:0737615143"><img src="https://via.placeholder.com/15?text=📞" alt="Call"> Call 0737615143</a>
+                <a href="https://wa.me/0758955122?text=Hello%20Wess%2C"><img src="https://via.placeholder.com/15?text=💬" alt="Text"> Text via WhatsApp</a>
+            </div>
         </div>
         <p>&copy; 2025 Your Name. All rights reserved.</p>
     </footer>
@@ -421,7 +593,23 @@
                 el.style.transitionDelay = `${index * 0.2}s`;
                 observer.observe(el);
             });
+
+            // Randomize shoot positions and delays for variety
+            document.querySelectorAll('.shoot').forEach(shoot => {
+                shoot.style.left = `${Math.random() * 100}%`;
+                shoot.style.top = `${Math.random() * 100}%`;
+                shoot.style.animationDelay = `${Math.random() * 2}s`;
+                shoot.style.animationDuration = `${3 + Math.random() * 2}s`;
+            });
+
+            // Randomize line positions and delays
+            document.querySelectorAll('.line').forEach(line => {
+                line.style.top = `${Math.random() * 100}%`;
+                line.style.animationDelay = `${Math.random() * 3}s`;
+                line.style.animationDuration = `${4 + Math.random() * 2}s`;
+                line.style.transform = `rotate(${Math.random() * 90 - 45}deg)`;
+            });
         });
     </script>
 </body>
-</html>
+    </html>
